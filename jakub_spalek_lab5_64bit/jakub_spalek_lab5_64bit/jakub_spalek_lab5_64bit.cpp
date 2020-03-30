@@ -4,6 +4,10 @@
 extern "C" INT64  SumMatrix64(INT64** matrix, INT64 n1, INT64 n2);
 extern "C" INT64* Multiply64(INT64** matrix, INT64* vector, INT64* result, INT64 rows, INT64 cols);
 
+extern "C" INT64  SumMatrix32(int** matrix, int n1, int n2);
+extern "C" INT64* Multiply32(int** matrix, int* vector, int* result, int rows, int cols);
+
+
 void TestCode32();
 void TestCode64();
 
@@ -16,7 +20,62 @@ int main()
 
 void TestCode32()
 {
+    int** matrix;
+    int* vector;
+    int* multiplicationResult;
+    int rows, cols;
 
+    std::cout << "Podaj liczbe wierszy: ";
+    std::cin >> rows;
+    std::cout << "Podaj liczbe  kolumn: ";
+    std::cin >> cols;
+
+    matrix = new int* [rows];
+    vector = new int[cols];
+    multiplicationResult = new int[cols];
+
+    for (int i = 0; i < rows; i++)
+    {
+        matrix[i] = new int[cols];
+    }
+
+    for (int x = 0; x < rows; x++)
+    {
+        for (int y = 0; y < cols; y++)
+        {
+            printf("[%d][%d]: ", x, y);
+            std::cin >> matrix[x][y];
+        }
+    }
+
+    std::cout << "Suma elementow tej macierzy: " << SumMatrix32(matrix, rows, cols) << std::endl;
+
+    std::cout << "Podaj wektor do mnozenia:\n";
+
+    for (int i = 0; i < cols; i++)
+    {
+        printf("[%d]: ", i);
+        std::cin >> vector[i];
+    }
+
+    std::cout << "Wynik mnozenia macierzy i wektora:\n";
+
+    Multiply32(matrix, vector, multiplicationResult, rows, cols);
+
+    for (int i = 0; i < rows; i++)
+    {
+        printf("[%d]: %d", i, multiplicationResult[i]);
+        std::cout << std::endl;
+    }
+
+    system("pause");
+
+    for (int i = 0; i < rows; i++)
+    {
+        delete[] matrix[i];
+    }
+
+    delete[] matrix, vector, multiplicationResult;
 }
 
 void TestCode64()
