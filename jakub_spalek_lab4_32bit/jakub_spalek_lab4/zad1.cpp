@@ -104,9 +104,9 @@ int SumujElementyTablicy32jnz(int* tab, int n)
 
             mov sum, eax                 // zapisanie wyniku
 
-            pop ecx                      // przywrocenie stanu rejestrow
-            pop ebx
-            pop eax
+        pop ecx                          // przywrocenie stanu rejestrow
+        pop ebx
+        pop eax
     }
 
     return sum;
@@ -123,7 +123,7 @@ void ZerujTablice(int* tab, int n)
 
         Zeruj:
             mov  [ebx + 4 * ecx - 4], 0  // tab[i] = 0
-            loop Suma                    // dopoki ecx > 0 skocz do Zeruj
+            loop Zeruj                    // dopoki ecx > 0 skocz do Zeruj
         
         pop ecx                          
         pop ebx
@@ -214,7 +214,7 @@ int Min(int* tab, int n)
 
         Szukaj :
             cmp eax, [ebx + 4 * ecx - 4]    // jesli eax jest mniejsze od tab[i] 
-            cmovl eax, [ebx + 4 * ecx - 4]  // przenies tab[i] do eax
+            cmovg eax, [ebx + 4 * ecx - 4]  // przenies tab[i] do eax
             loop Szukaj                     // dopoki i > 0 skacz do Szukaj
 
         mov min, eax                    // zapisz wynik do zmiennej min
