@@ -2,9 +2,8 @@ _DATA SEGMENT
 _DATA ENDS
 _TEXT SEGMENT
 
-.code
-
-Multiply64 proc uses rbx rsi, matrix:ptr, vector:ptr, result:ptr, rows:qword, cols:qword
+PUBLIC Multiply64 
+Multiply64 PROC uses rbx rsi, matrix:ptr, vector:ptr, result:ptr, rows:qword, cols:qword
                                 ; rcx, rdx, r8, r9, stack
 first:
     mov rsi, [rcx + r9 * 8 - 8]     ; matrix[rows]* ustawiamy siê na ostatni element

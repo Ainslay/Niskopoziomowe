@@ -151,7 +151,9 @@
     <ClCompile Include="jakub_spalek_lab5_64bit.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="Multiply32.asm" />
     <MASM Include="Multiply64.asm" />
+    <MASM Include="SumMatrix32.asm" />
     <MASM Include="SumMatrix64.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

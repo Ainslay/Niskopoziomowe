@@ -1,3 +1,5 @@
+// Opracowane przez: Jakub Spa³ek, Aleksandra Pyrkosz, Daniel Wiêcek
+
 #include <iostream>
 #include <windows.h>
 
@@ -20,6 +22,8 @@ int main()
 
 void TestCode32()
 {
+    std::cout << "WERSJA 32 BITOWA\n\n";
+
     int** matrix;
     int* vector;
     int* multiplicationResult;
@@ -80,6 +84,8 @@ void TestCode32()
 
 void TestCode64()
 {
+    std::cout << "WERSJA 64 BITOWA\n\n";
+
     INT64** matrix;
     INT64* vector;
     INT64* multiplicationResult;

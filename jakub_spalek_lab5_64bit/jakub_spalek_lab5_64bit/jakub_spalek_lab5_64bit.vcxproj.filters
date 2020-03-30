@@ -26,5 +26,11 @@
     <MASM Include="Multiply64.asm">
       <Filter>Source Files</Filter>
     </MASM>
+    <MASM Include="Multiply32.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
+    <MASM Include="SumMatrix32.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

@@ -1,3 +1,4 @@
+// Opracowane przez: Jakub Spa³ek, Aleksandra Pyrkosz, Daniel Wiêcek
 #include <iostream>
 
 int SumMatrix(int** matrix, int n1, int n2);
