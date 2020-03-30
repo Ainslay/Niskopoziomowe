@@ -1,7 +1,7 @@
 #include <iostream>
 
 int SumMatrix(int** matrix, int n1, int n2);
-int* Multiply(int** matrix, int* vector, int rows, int cols);
+void Multiply(int** matrix, int* vector, int* result, int rows, int cols);
 
 int main()
 {
@@ -17,6 +17,7 @@ int main()
 
     matrix = new int* [rows];
     vector = new int[cols];
+    multiplicationResult = new int[cols];
 
     for (int i = 0; i < rows; i++)
     {
@@ -44,7 +45,7 @@ int main()
 
     std::cout << "Wynik mnozenia macierzy i wektora:\n";
     
-    multiplicationResult = Multiply(matrix, vector, rows, cols);
+    Multiply(matrix, vector, multiplicationResult, rows, cols);
 
     for (int i = 0; i < rows; i++)
     {
@@ -77,7 +78,7 @@ int SumMatrix(int** matrix, int rows, int cols)
         xor eax, eax        // suma
 
         first:
-            mov edi, [esi + 4 * ecx - 4]
+            mov edi, [esi + 4 * ecx - 4]        // adres wiersza
             mov ebx, cols
 
             second:
@@ -98,9 +99,8 @@ int SumMatrix(int** matrix, int rows, int cols)
     return sum;
 }
 
-int* Multiply(int** matrix, int* vector, int rows, int cols)
+void Multiply(int** matrix, int* vector, int* result, int rows, int cols)
 {
-    int* result = new int[cols];
     
     __asm{
         push edi
@@ -138,6 +138,4 @@ int* Multiply(int** matrix, int* vector, int rows, int cols)
         pop ebx
         pop edi
     }
-
-    return result;
 }
