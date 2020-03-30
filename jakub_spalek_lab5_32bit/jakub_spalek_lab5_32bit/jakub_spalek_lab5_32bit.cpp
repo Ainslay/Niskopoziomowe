@@ -1,52 +1,52 @@
 #include <iostream>
 
 int SumMatrix(int** matrix, int n1, int n2);
-int* Multiply(int** matrix, int* vector, int n1, int n2);
+int* Multiply(int** matrix, int* vector, int rows, int cols);
 
 int main()
 {
     int** matrix;
     int* vector;
     int* multiplicationResult;
-    int n1, n2;
+    int rows, cols;
 
-    std::cout << "Podaj liczbe kolumn: ";
-    std::cin >> n1;
     std::cout << "Podaj liczbe wierszy: ";
-    std::cin >> n2;
+    std::cin >> rows;
+    std::cout << "Podaj liczbe  kolumn: ";
+    std::cin >> cols;
 
-    matrix = new int* [n1];
-    vector = new int[n1];
+    matrix = new int* [rows];
+    vector = new int[cols];
 
-    for (int i = 0; i < n1; i++)
+    for (int i = 0; i < rows; i++)
     {
-        matrix[i] = new int[n2];
+        matrix[i] = new int[cols];
     }
 
-    for (int x = 0; x < n1; x++)
+    for (int x = 0; x < rows; x++)
     {
-        for (int y = 0; y < n2; y++)
+        for (int y = 0; y < cols; y++)
         {
             printf("[%d][%d]: ", x, y);
             std::cin >> matrix[x][y];
         }
     }
 
-    std::cout << "Suma elementow tej macierzy: " << SumMatrix(matrix, n1, n2) << std::endl;
+    std::cout << "Suma elementow tej macierzy: " << SumMatrix(matrix, rows, cols) << std::endl;
 
     std::cout << "Podaj wektor do mnozenia:\n";
 
-    for (int i = 0; i < n1; i++)
+    for (int i = 0; i < cols; i++)
     {
         printf("[%d]: ", i);
         std::cin >> vector[i];
     }
 
-    std::cout << "Wynik mno¿enia macierzy i wektora:\n";
+    std::cout << "Wynik mnozenia macierzy i wektora:\n";
     
-    multiplicationResult = Multiply(matrix, vector, n1, n2);
+    multiplicationResult = Multiply(matrix, vector, rows, cols);
 
-    for (int i = 0; i < n1; i++)
+    for (int i = 0; i < rows; i++)
     {
         printf("[%d]: %d", i, multiplicationResult[i]);
         std::cout << std::endl;
@@ -54,7 +54,7 @@ int main()
 
     system("pause");
 
-    for (int i = 0; i < n1; i++)
+    for (int i = 0; i < rows; i++)
     {
         delete[] matrix[i];
     }
@@ -62,7 +62,7 @@ int main()
     delete[] matrix, vector, multiplicationResult;
 }
 
-int SumMatrix(int** matrix, int n1, int n2)
+int SumMatrix(int** matrix, int rows, int cols)
 {
     int sum = 0;
 
@@ -72,13 +72,13 @@ int SumMatrix(int** matrix, int n1, int n2)
         push edi
 
         mov esi, matrix     // adres macierzy
-        mov ecx, n1         // kolumny (x)
-        mov ebx, n2         // wiersze (y)
+        mov ecx, rows       // wiersze (x)
+        mov ebx, cols       // kolumny (y)
         xor eax, eax        // suma
 
         first:
             mov edi, [esi + 4 * ecx - 4]
-            mov ebx, n2
+            mov ebx, cols
 
             second:
                 add eax, [edi + 4 * ebx - 4]    // matrix[x][y]
@@ -98,9 +98,9 @@ int SumMatrix(int** matrix, int n1, int n2)
     return sum;
 }
 
-int* Multiply(int** matrix, int* vector, int n1, int n2)
+int* Multiply(int** matrix, int* vector, int rows, int cols)
 {
-    int* result = new int[n1];
+    int* result = new int[cols];
     
     __asm{
         push edi
@@ -110,7 +110,7 @@ int* Multiply(int** matrix, int* vector, int n1, int n2)
         mov esi, matrix     // adres macierzy
         mov edi, vector     // adres wektora
         mov ebx, result     // adres wyniku
-        mov ecx, n2         // wiersze (y)
+        mov ecx, rows       // wiersze (x)
 
         first:
             mov esi, matrix                 // adres macierzy
@@ -120,7 +120,7 @@ int* Multiply(int** matrix, int* vector, int n1, int n2)
             push ebx
             
             mov ebx, 0
-            mov ecx, n1     // kolumny (x)
+            mov ecx, cols     // kolumny (y)
 
             second:
                 mov  eax, [esi + 4 * ecx - 4]    // matrix[x][y]
