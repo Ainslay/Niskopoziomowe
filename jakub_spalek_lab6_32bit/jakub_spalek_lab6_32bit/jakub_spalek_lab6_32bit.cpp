@@ -150,10 +150,10 @@ void SumMatrices(int** matrixA, int** matrixB, int** result, int rows, int cols)
         push ebx
         push edi
 
-        mov esi, matrixA
+        mov esi, matrixA        // zapisanie adresów macierzy w rejestrach
         mov edi, matrixB
         mov ebx, result
-        mov ecx, rows
+        mov ecx, rows           // ustawinenie iteratora
 
         rowsLoop:
             push ecx        // zabepiecz ecx na stosie
@@ -169,7 +169,7 @@ void SumMatrices(int** matrixA, int** matrixB, int** result, int rows, int cols)
             colsLoop:
                 xor eax, eax
                 add eax, [esi + 4 * ecx - 4]
-                add eax, [edi + 4 * ecx - 4] // TUTAJ
+                add eax, [edi + 4 * ecx - 4]
                 mov [ebx + 4 * ecx - 4], eax
                 loop colsLoop   // dopóki ecx > 0 skacz do cols
                 
@@ -189,9 +189,52 @@ void SumMatrices(int** matrixA, int** matrixB, int** result, int rows, int cols)
 
 void MultiplyMatrices(int** matrixA, int** matrixB, int** result, int rowsA, int colsA, int colsB)
 {
+    __asm {
 
+        push esi            // zabezpieczenie rejestrów
+        push ebx
+        push edi
+
+        mov ecx, rowsA      // przygotowanie iteratora n1 dla for1
+        
+        for1:
+            push ecx
+            mov ecx, colsB          // przygotowanie iteratora n3 dla for3
+
+            for3:
+                mov ebx, 0
+                mov esi, matrixA
+                mov eax, [esp]      // wpisanie do eax rowsA
+                mov esi, [esi + 4 * eax - 4]    // matrixA [n1]
+
+                push ecx
+                mov ecx, colsA
+                for2:
+                    mov edi, matrixB
+                    mov eax, [esp]                  // wpisanie do eax colsB
+                    mov edi, [edi + 4 * ecx - 4]    // matrixB[n2]
+                    mov eax, [edi + 4 * eax - 4]
+                    imul eax, [esi + 4 * ecx - 4]    // matrixA[n1][n2] * matrixB[n2][n3]
+                    add ebx, eax                    // edx += matrixA[n1][n2] * matrixB[n2][n3]
+                    
+                    loop for2               // dopoki n2 > 0 skacz do for2
+                
+                pop ecx
+                mov esi, result             // adres macierzy result
+                mov eax, [esp]              // eax = n1 , pobrane ze stosu
+
+                mov esi, [esi + 4 * eax - 4]     // result[n1]
+                mov [esi + 4 * ecx - 4], ebx     // result[n1][n3] = edx
+                
+            loop for3           // dopoki n3 > 0 skacz do for3
+            pop ecx
+        loop for1           // dopoki n1 > 0 skacz do for1
+
+        pop edi
+        pop ebx
+        pop esi
+    }
 }
-
 void PrintMatrix2D(int** matrix, int rows, int cols)
 {
     for (int x = 0; x < rows; x++)
