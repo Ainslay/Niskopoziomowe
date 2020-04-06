@@ -1,3 +1,5 @@
+// Opracowane przez: Jakub Spa³ek, Aleksandra Pyrkosz, Daniel Wiêcek
+
 #include <iostream>
 #include <Windows.h>
 

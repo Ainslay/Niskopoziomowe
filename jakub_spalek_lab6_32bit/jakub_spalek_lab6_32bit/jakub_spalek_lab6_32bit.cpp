@@ -1,3 +1,5 @@
+// Opracowane przez: Jakub Spa³ek, Aleksandra Pyrkosz, Daniel Wiêcek
+
 #include <iostream>
 
 void SumMatrices(int** matrixA, int** matrixB, int** result, int rows, int cols);
