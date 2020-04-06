@@ -2,9 +2,9 @@ _DATA SEGMENT
 _DATA ENDS
 _TEXT SEGMENT
 
-PUBLIC MultiplyMatrices64 ;(int** matrixA, int** matrixB, int** result, int rowsA, int colsA, int colsB)
+PUBLIC MultiplyMatrices64 ;(INT64** matrixA, INT64** matrixB, INT64** result, INT64 rowsA, INT64 colsA, INT64 colsB)
 MultiplyMatrices64 PROC uses rsi rbx rdi, matrixA:ptr, matrixB:ptr, result:ptr, rowsA:qword, colsA:qword, colsB:qword
-					; rcx, rdx, r8, r9, stack
+					; rcx, rdx, r8, r9
         
         mov r10, rdx 
         mov rdx, rcx

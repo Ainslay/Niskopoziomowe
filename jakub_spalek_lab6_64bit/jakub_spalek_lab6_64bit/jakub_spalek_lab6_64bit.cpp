@@ -3,7 +3,7 @@
 
 extern "C" void SumMatrices64(INT64** matrixA, INT64** matrixB, INT64** result, INT64 rows, INT64 cols);
 extern "C" void MultiplyMatrices64(INT64** matrixA, INT64** matrixB, INT64** result, INT64 rowsA, INT64 colsA, INT64 colsB);
-//extern "C" INT64  MinMatrix3D64(INT64*** matrix, INT64 rows, INT64 cols, INT64 depth);
+extern "C" INT64  MinMatrix3D64(INT64*** matrix, INT64 rows, INT64 cols, INT64 depth);
 
 void PrintMatrix2D(INT64** matrix, INT64 rows, INT64 cols);
 void PrintMatrix3D(INT64*** matrix, INT64 rows, INT64 cols, INT64 depth);
@@ -142,56 +142,56 @@ int main()
 
     delete[] matrixA, matrixB;
 
-    ////+++++++++++++++++++++++++++++++++++++++++++++++
+    //+++++++++++++++++++++++++++++++++++++++++++++++
 
-    //std::cout << "---=== MIN Z MACIERZY TROJWYMIAROWEJ ===---\n";
-    //INT64 rows3D, cols3D, depth;
+    std::cout << "---=== MIN Z MACIERZY TROJWYMIAROWEJ ===---\n";
+    INT64 rows3D, cols3D, depth;
 
-    //std::cout << "Podaj X macierzy 3D: ";
-    //std::cin >> rows3D;
-    //std::cout << "Podaj Y macierzy 3D: ";
-    //std::cin >> cols3D;
-    //std::cout << "Podaj Z macierzy 3D: ";
-    //std::cin >> depth;
+    std::cout << "Podaj X macierzy 3D: ";
+    std::cin >> rows3D;
+    std::cout << "Podaj Y macierzy 3D: ";
+    std::cin >> cols3D;
+    std::cout << "Podaj Z macierzy 3D: ";
+    std::cin >> depth;
 
-    //INT64*** matrix3D = new INT64** [rows3D];
+    INT64*** matrix3D = new INT64** [rows3D];
 
-    //for (INT64 i = 0; i < rows3D; i++)
-    //{
-    //    matrix3D[i] = new INT64* [cols3D];
+    for (INT64 i = 0; i < rows3D; i++)
+    {
+        matrix3D[i] = new INT64* [cols3D];
 
-    //    for (INT64 j = 0; j < cols3D; j++)
-    //    {
-    //        matrix3D[i][j] = new INT64[depth];
-    //    }
-    //}
+        for (INT64 j = 0; j < cols3D; j++)
+        {
+            matrix3D[i][j] = new INT64[depth];
+        }
+    }
 
-    //for (INT64 x = 0; x < rows3D; x++)
-    //{
-    //    for (INT64 y = 0; y < cols3D; y++)
-    //    {
-    //        for (INT64 z = 0; z < depth; z++)
-    //        {
-    //            printf("[%I64u][%I64u][%I64u]: ", x, y, z);
-    //            std::cin >> matrix3D[x][y][z];
-    //        }
-    //    }
-    //}
+    for (INT64 x = 0; x < rows3D; x++)
+    {
+        for (INT64 y = 0; y < cols3D; y++)
+        {
+            for (INT64 z = 0; z < depth; z++)
+            {
+                printf("[%I64u][%I64u][%I64u]: ", x, y, z);
+                std::cin >> matrix3D[x][y][z];
+            }
+        }
+    }
 
-    //PrintMatrix3D(matrix3D, rows3D, cols3D, depth);
-    //INT64 min = MinMatrix3D64(matrix3D, rows3D, cols3D, depth);
+    PrintMatrix3D(matrix3D, rows3D, cols3D, depth);
+    INT64 min = MinMatrix3D64(matrix3D, rows3D, cols3D, depth);
 
-    //std::cout << "Minimalna wartosc w tej macierzy wynosi: " << min << std::endl;
+    std::cout << "Minimalna wartosc w tej macierzy wynosi: " << min << std::endl;
 
-    //for (INT64 i = 0; i < rows3D; i++)
-    //{
-    //    for (INT64 j = 0; j < cols3D; j++)
-    //    {
-    //        delete[] matrix3D[i][j];
-    //    }
-    //    delete[] matrix3D[i];
-    //}
-    //delete[] matrix3D;
+    for (INT64 i = 0; i < rows3D; i++)
+    {
+        for (INT64 j = 0; j < cols3D; j++)
+        {
+            delete[] matrix3D[i][j];
+        }
+        delete[] matrix3D[i];
+    }
+    delete[] matrix3D;
 
     system("pause");
 }

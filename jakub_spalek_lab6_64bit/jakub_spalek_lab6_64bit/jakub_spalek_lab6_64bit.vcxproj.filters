@@ -26,5 +26,8 @@
     <MASM Include="MultiplyMatrices64.asm">
       <Filter>Source Files</Filter>
     </MASM>
+    <MASM Include="MinMatrix3D64.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

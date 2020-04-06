@@ -2,9 +2,9 @@ _DATA SEGMENT
 _DATA ENDS
 _TEXT SEGMENT
 
-PUBLIC SumMatrices64 ;(int** matrixA, int** matrixB, int** result, int rows, int cols)
+PUBLIC SumMatrices64 ;(INT64** matrixA, INT64** matrixB, INT64** result, INT64 rows, INT64 cols)
 SumMatrices64 PROC uses rsi rbx rdi, matrixA:ptr, matrixB:ptr, result:ptr, rows:qword, cols:qword
-					; rcx, rdx, r8, r9, stack
+					; rcx, rdx, r8, r9
 
         mov rsi, rcx        ; zapisanie adresów macierzy w rejestrach
         mov rdi, rdx
