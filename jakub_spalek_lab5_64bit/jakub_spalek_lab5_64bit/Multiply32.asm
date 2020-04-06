@@ -21,7 +21,7 @@ PUBLIC Multiply32           ; (int** matrix, int* vector, int* result, int rows,
             jnz  second
 
 
-        mov [r8 + r9 * 4 - 4], r10      ; podejrzewam, ¿e tu jest problem, liczy w porz¹dku a zapisuje 0 wszedzie poza indeksem [0]
+        mov [r8 + r9 * 4 - 4], r10d      ; podejrzewam, ¿e tu jest problem, liczy w porz¹dku a zapisuje 0 wszedzie poza indeksem [0]
         dec r9
         jnz first
 
