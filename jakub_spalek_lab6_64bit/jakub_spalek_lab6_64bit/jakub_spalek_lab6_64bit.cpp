@@ -2,7 +2,7 @@
 #include <Windows.h>
 
 extern "C" void SumMatrices64(INT64** matrixA, INT64** matrixB, INT64** result, INT64 rows, INT64 cols);
-//extern "C" void MultiplyMatrices64(INT64** matrixA, INT64** matrixB, INT64** result, INT64 rowsA, INT64 colsA, INT64 colsB);
+extern "C" void MultiplyMatrices64(INT64** matrixA, INT64** matrixB, INT64** result, INT64 rowsA, INT64 colsA, INT64 colsB);
 //extern "C" INT64  MinMatrix3D64(INT64*** matrix, INT64 rows, INT64 cols, INT64 depth);
 
 void PrintMatrix2D(INT64** matrix, INT64 rows, INT64 cols);
@@ -64,83 +64,83 @@ int main()
 
     delete[] matrixA, matrixB, sumResult;
 
-    ////+++++++++++++++++++++++++++++++++++++++++++++++
+    //+++++++++++++++++++++++++++++++++++++++++++++++
 
-    //std::cout << "---=== MNOZENIE ===---\n";
-    //std::cout << "Podaj liczbe wierszy macierzy A: ";
-    //std::cin >> rowsA;
-    //std::cout << "Podaj liczbe  kolumn macierzy A: ";
-    //std::cin >> colsA;
+    std::cout << "---=== MNOZENIE ===---\n";
+    std::cout << "Podaj liczbe wierszy macierzy A: ";
+    std::cin >> rowsA;
+    std::cout << "Podaj liczbe  kolumn macierzy A: ";
+    std::cin >> colsA;
 
-    //matrixA = new INT64* [rowsA];
+    matrixA = new INT64* [rowsA];
 
-    //for (INT64 i = 0; i < rowsA; i++)
-    //{
-    //    matrixA[i] = new INT64[colsA];
-    //}
+    for (INT64 i = 0; i < rowsA; i++)
+    {
+        matrixA[i] = new INT64[colsA];
+    }
 
-    //std::cout << "Wprowadz macierz A:\n";
-    //for (INT64 x = 0; x < rowsA; x++)
-    //{
-    //    for (INT64 y = 0; y < colsA; y++)
-    //    {
-    //        printf("[%I64u][%I64u]: ", x, y);
-    //        std::cin >> matrixA[x][y];
-    //    }
-    //}
+    std::cout << "Wprowadz macierz A:\n";
+    for (INT64 x = 0; x < rowsA; x++)
+    {
+        for (INT64 y = 0; y < colsA; y++)
+        {
+            printf("[%I64u][%I64u]: ", x, y);
+            std::cin >> matrixA[x][y];
+        }
+    }
 
-    //std::cout << "Podaj liczbe wierszy macierzy B: ";
-    //std::cin >> rowsB;
-    //std::cout << "Podaj liczbe  kolumn macierzy B: ";
-    //std::cin >> colsB;
+    std::cout << "Podaj liczbe wierszy macierzy B: ";
+    std::cin >> rowsB;
+    std::cout << "Podaj liczbe  kolumn macierzy B: ";
+    std::cin >> colsB;
 
-    //INT64** mulResult = new INT64* [rowsA];
+    INT64** mulResult = new INT64* [rowsA];
 
-    //for (INT64 i = 0; i < rowsA; i++)
-    //{
-    //    mulResult[i] = new INT64[colsB];
-    //}
+    for (INT64 i = 0; i < rowsA; i++)
+    {
+        mulResult[i] = new INT64[colsB];
+    }
 
-    //if (colsA == rowsB)
-    //{
-    //    matrixB = new INT64* [rowsB];
+    if (colsA == rowsB)
+    {
+        matrixB = new INT64* [rowsB];
 
-    //    for (INT64 i = 0; i < rowsB; i++)
-    //    {
-    //        matrixB[i] = new INT64[colsB];
-    //    }
+        for (INT64 i = 0; i < rowsB; i++)
+        {
+            matrixB[i] = new INT64[colsB];
+        }
 
-    //    std::cout << "Wprowadz macierz B:\n";
-    //    for (INT64 x = 0; x < rowsB; x++)
-    //    {
-    //        for (INT64 y = 0; y < colsB; y++)
-    //        {
-    //            printf("[%I64u][%I64u]: ", x, y);
-    //            std::cin >> matrixB[x][y];
-    //        }
-    //    }
+        std::cout << "Wprowadz macierz B:\n";
+        for (INT64 x = 0; x < rowsB; x++)
+        {
+            for (INT64 y = 0; y < colsB; y++)
+            {
+                printf("[%I64u][%I64u]: ", x, y);
+                std::cin >> matrixB[x][y];
+            }
+        }
 
-    //    MultiplyMatrices64(matrixA, matrixB, mulResult, rowsA, colsA, colsB);
+        MultiplyMatrices64(matrixA, matrixB, mulResult, rowsA, colsA, colsB);
 
-    //    std::cout << "Wynik mnozenia tych dwoch macierzy:\n";
-    //    PrintMatrix2D(mulResult, rowsA, colsB);
+        std::cout << "Wynik mnozenia tych dwoch macierzy:\n";
+        PrintMatrix2D(mulResult, rowsA, colsB);
 
-    //    for (INT64 i = 0; i < rowsB; i++)
-    //    {
-    //        delete[] matrixB[i];
-    //    }
-    //}
-    //else
-    //{
-    //    std::cerr << "Liczba kolumn macierzy A musi byc rowna liczbie wierszy macierzy B!" << std::endl;
-    //}
+        for (INT64 i = 0; i < rowsB; i++)
+        {
+            delete[] matrixB[i];
+        }
+    }
+    else
+    {
+        std::cerr << "Liczba kolumn macierzy A musi byc rowna liczbie wierszy macierzy B!" << std::endl;
+    }
 
-    //for (INT64 i = 0; i < rowsA; i++)
-    //{
-    //    delete[] matrixA[i], mulResult[i];
-    //}
+    for (INT64 i = 0; i < rowsA; i++)
+    {
+        delete[] matrixA[i], mulResult[i];
+    }
 
-    //delete[] matrixA, matrixB;
+    delete[] matrixA, matrixB;
 
     ////+++++++++++++++++++++++++++++++++++++++++++++++
 
