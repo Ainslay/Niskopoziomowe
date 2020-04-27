@@ -1,3 +1,5 @@
+// Opracowane przez: Jakub Spa³ek, Aleksandra Pyrkosz, Daniel Wiêcek
+
 #include <iostream>
 
 using namespace std;
@@ -167,7 +169,7 @@ double Task4(double* x, double* z, int N)
         mov ecx, N                            // iterator
         mov esi, x                            // adres pierwszego wektora
         mov edi, z                            // adres drugiego wektora
-        fldz                                  // przeniesienie zera na stos             [s]
+        fldz                                  // przeniesienie zera na stos   [s]
         
     Sum:
         fld  qword ptr [esi + 8 * ecx - 8]    // x[ecx-1]                     [x : s]
