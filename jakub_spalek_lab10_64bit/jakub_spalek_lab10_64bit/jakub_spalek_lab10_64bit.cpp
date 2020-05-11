@@ -1,4 +1,9 @@
 // Opracowane przez: Jakub Spa³ek, Aleksandra Pyrkosz, Daniel Wiêcek
+// Wersja 64 NIE DZIA£A, nie byliœmy w stanie jej rozwi¹zaæ 
+
+
+
+
 
 #include <iostream>
 #include <chrono>
@@ -9,10 +14,11 @@ using namespace std::chrono;
 void Task1();
 void Task2();
 
-void QuadraticEquation(float a, float b, float c);
-float** AsmMultiplyMatrices(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB);
+extern "C" float** AsmMultiplyMatrices64(float** matrixA, float** matrixB, float** result, int rowsA, int rowsB, int colsB);
+extern "C" float QuadraticEquation64(float a, float b, float c, float* roots);
 float** CppMultiplyMatrices(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB);
 
+void QuadraticEquation(float a, float b, float c);
 float** Create2DMatrix(const int& rows, const int& cols);
 void Delete2DMatrix(float** matrix, const int& rows);
 void Fill2DMatrixWithRandom(float** matrix, const int& rows, const int& cols);
@@ -21,7 +27,7 @@ void Print2DMatrix(float** matrix, const int& rows, const int& cols);
 int main()
 {
 	Task1();
-	Task2();
+	//Task2();
 }
 
 void Task1()
@@ -74,8 +80,9 @@ void Task2()
 	auto cppStop = high_resolution_clock::now();
 	auto cppDuration = duration_cast<nanoseconds>(cppStop - cppStart);
 
+	float** asmMultiplyResult = Create2DMatrix(rowsA, colsB);
 	auto asmStart = high_resolution_clock::now();
-	float** asmMultiplyResult = AsmMultiplyMatrices(matrixA, matrixB, rowsA, rowsB, colsB);
+	AsmMultiplyMatrices64(matrixA, matrixB, asmMultiplyResult, rowsA, rowsB, colsB);
 	auto asmStop = high_resolution_clock::now();
 	auto asmDuration = duration_cast<nanoseconds>(asmStop - asmStart);
 
@@ -101,135 +108,21 @@ void Task2()
 void QuadraticEquation(float a, float b, float c)
 {
 	// delta: b b * 4 a * c * -
-	float delta = 0.0f;
-	float x1 = 0.0f, x2 = 0.0f;
-
-	__asm {
-		fld b					// [b]
-		fld st					// [b : b]
-		fmulp st(1), st			// [b^2]
-
-		fld a					// [a : b^2]
-		fld1					// [1 : a : b^2]	
-		fld1					// [1 : 1 : a : b^2]
-		fadd					// [2 : a : b^2]
-		fld st					// [2 : 2 : a : b^2]
-		fadd					// [4 : a : b^2]
-		fmul					// [4a : b^2]
-		fmul c					// [4ac : b^2]
-		fsubp st(1), st			// [b^2-4ac] obliczona delta
-		
-		fst delta					
-		cmp delta, 0 			// porównanie delty i 0
-		ja Greater				// jeœli delta > 0 skacz do greater
-		je Equal				// jeœli delta = 0 skacz do equal
-		jb Below				// jeœli delta < 0 skacz do below
-	
-	Greater:
-		fsqrt					// [sqrt(delta)]
-		
-		fld b					// [b : sqrt(delta)]
-		fchs					// [-b : sqrt(delta)]
-		fld st					// [-b : -b : sqrt(delta)]
-		fxch st(2)				// [sqrt(delta) : -b : -b]
-
-		fadd st(1), st			// [sqrt(delta) : -b+sqrt(delta) : -b]
-		fsubp st(2), st			// [-b+sqrt(delta) : -b-sqrt(delta)]
-
-
-		fld1					// [1 : -b+sqrt(delta) : -b-sqrt(delta)]
-		fld1					// [1 : 1 : -b+sqrt(delta) : -b-sqrt(delta)]
-		fadd					// [2 : -b+sqrt(delta) : -b-sqrt(delta)]
-		fmul a					// [2a : -b+sqrt(delta) : -b-sqrt(delta)]
-		fdiv st(1), st			// [2a : -b+sqrt(delta)/2a : -b-sqrt(delta)]
-		fdivp st(2), st			// [-b+sqrt(delta)/2a : -b-sqrt(delta)/2a]
-		fstp x2
-		fstp x1
-
-		jmp End 
-	Equal:
-		fld b					// [b : delta]
-		fchs					// [-b : delta]
-		fstp st(1)				// [-b]
-		fld1					// [1 : -b]
-		fld1					// [1 : 1 : -b]
-		fadd					// [2 : -b]
-		fmul a					// [2a : -b]
-		fdivp st(1), st			// [-b/2a]
-		fst x1
-		fstp x2
-
-		jmp End
-	Below:
-		// Nie ma rzeczywistych miejsc zerowych
-	End:
-	}
+	float* roots = new float[2]{ 0, 0 };
+	float delta = QuadraticEquation64(a,b,c,roots);
 
 	if (delta > 0)
 	{
-		cout << "Miejsca zerowe: x1 = " << x1 << " " << "x2 = " << x2 << endl;
+		cout << "Miejsca zerowe: x1 = " << roots[0] << " " << "x2 = " << roots[1] << endl;
 	}
 	else if (delta == 0)
 	{
-		cout << "Miejsce zerower: x1 = " << x1 << endl;
+		cout << "Miejsce zerower: x1 = " << roots[0] << endl;
 	}
 	else
 	{
 		cout << "Brak miejsc zerowych w zbiorze liczb rzeczywistych" << endl;
 	}
-}
-
-float** AsmMultiplyMatrices(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB)
-{
-	float** result = Create2DMatrix(rowsA, colsB);
-
-	__asm {
-		push edi
-		push esi
-		push ebx
-
-		mov ecx, rowsA								// iterator i
-
-		LoopI:
-			mov edi, matrixA						// adres macierzy A
-			mov ebx, result							// adres macierzy wynikowej
-
-			mov edi, [edi + 4 * ecx - 4]			// matrixA[i]
-			mov ebx, [ebx + 4 * ecx - 4]			// result[i]
-
-			push ecx								// zabezpieczamy i
-			mov ecx, colsB							// iterator j
-
-			LoopJ:
-				
-				mov edx, rowsB						// iterator k
-				fldz								// [s]
-
-				LoopK:
-					mov esi, matrixB				// adres macierzy B
-					mov esi, [esi + 4 * edx - 4]	// matrixB[k]
-
-					fld [edi + 4 * edx - 4]			// [matrixA[i][k] : s]
-					fld [esi + 4 * ecx - 4]			// [matrixB[k][j] : matrixA[i][k] : s]
-					fmulp st(1), st					// [matrixB[k][j] * matrixA[i][k] : s]
-					faddp st(1), st					// [s + matrixB[k][j] * matrixA[i][k]]
-
-					dec edx
-					jnz LoopK						// dopóki k > 0 skacz do LoopK
-
-				fstp [ebx + 4 * ecx - 4]			// zapisanie wyniku mno¿enia do result[i][j]
-
-			Loop LoopJ								// dopóki j > 0 skacz do LoopK
-
-			pop ecx
-		Loop LoopI									// dopóki i > 0 skacz do LoopK
-
-		pop ebx
-		pop esi
-		pop edi
-	}
-
-	return result;
 }
 
 float** CppMultiplyMatrices(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB)
