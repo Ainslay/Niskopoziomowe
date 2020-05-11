@@ -1,13 +1,17 @@
+// Opracowane przez: Jakub Spa³ek, Aleksandra Pyrkosz, Daniel Wiêcek
+
 #include <iostream>
 #include <chrono>
 
 using namespace std;
 using namespace std::chrono;
 
-void Task1(float a, float b, float c);
-float** Task2(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB);
+void Task1();
+void Task2();
 
-float** MultiplyMatrices(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB);
+void QuadraticEquation(float a, float b, float c);
+float** AsmMultiplyMatrices(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB);
+float** CppMultiplyMatrices(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB);
 
 float** Create2DMatrix(const int& rows, const int& cols);
 void Delete2DMatrix(float** matrix, const int& rows);
@@ -16,12 +20,28 @@ void Print2DMatrix(float** matrix, const int& rows, const int& cols);
 
 int main()
 {
+	Task1();
+	Task2();
+}
+
+void Task1()
+{
 	// Delta > 0
-	Task1(1, 5, 6);
+	QuadraticEquation(1, 5, 6);
 
 	// Delta = 0
-	//Task1(1, -6, 9);
+	QuadraticEquation(1, -6, 9);
 
+	// Delta < 0
+	QuadraticEquation(1, 2, 9);
+
+	cout << endl;
+	system("pause");
+	system("cls");
+}
+
+void Task2()
+{
 	int rowsA, colsA;
 	int rowsB, colsB;
 
@@ -45,23 +65,23 @@ int main()
 
 	cout << "Macierz A:\n";
 	Print2DMatrix(matrixA, rowsA, colsA);
-	
+
 	cout << "Macierz B:\n";
 	Print2DMatrix(matrixB, rowsB, colsB);
 
 	auto cppStart = high_resolution_clock::now();
-	float** cppMultiplyResult = MultiplyMatrices(matrixA, matrixB, rowsA, rowsB, colsB);
+	float** cppMultiplyResult = CppMultiplyMatrices(matrixA, matrixB, rowsA, rowsB, colsB);
 	auto cppStop = high_resolution_clock::now();
 	auto cppDuration = duration_cast<nanoseconds>(cppStop - cppStart);
 
 	auto asmStart = high_resolution_clock::now();
-	float** asmMultiplyResult = Task2(matrixA, matrixB, rowsA, rowsB, colsB);
+	float** asmMultiplyResult = AsmMultiplyMatrices(matrixA, matrixB, rowsA, rowsB, colsB);
 	auto asmStop = high_resolution_clock::now();
 	auto asmDuration = duration_cast<nanoseconds>(asmStop - asmStart);
 
 	cout << "Wynik mnozenia w c++:\n";
 	Print2DMatrix(cppMultiplyResult, rowsA, colsB);
-	cout << "Wykonanie operacji zajelo: " << cppDuration.count() << " nanosekund" <<  endl;
+	cout << "Wykonanie operacji zajelo: " << cppDuration.count() << " nanosekund" << endl;
 
 	cout << "\nWynik mnozenia w assemblerze:\n";
 	Print2DMatrix(asmMultiplyResult, rowsA, colsB);
@@ -78,10 +98,12 @@ int main()
 	system("pause");
 }
 
-void Task1(float a, float b, float c)
+void QuadraticEquation(float a, float b, float c)
 {
 	// delta: b b * 4 a * c * -
-	
+	float delta;
+	float x1, x2;
+
 	__asm {
 		fld b					// [b]
 		fld st					// [b : b]
@@ -97,8 +119,8 @@ void Task1(float a, float b, float c)
 		fmul c					// [4ac : b^2]
 		fsubp st(1), st			// [b^2-4ac] obliczona delta
 		
-		// Nawet jeœli delta jest 0 skacze do Greater !!!!!!! ???
-		fcom 					// porównanie delty i 0 (puste s(1) jest 0)
+		fst delta					
+		cmp delta, 0 			// porównanie delty i 0
 		ja Greater				// jeœli delta > 0 skacz do greater
 		je Equal				// jeœli delta = 0 skacz do equal
 		jb Below				// jeœli delta < 0 skacz do below
@@ -120,7 +142,10 @@ void Task1(float a, float b, float c)
 		fadd					// [2 : -b+sqrt(delta) : -b-sqrt(delta)]
 		fmul a					// [2a : -b+sqrt(delta) : -b-sqrt(delta)]
 		fdiv st(1), st			// [2a : -b+sqrt(delta)/2a : -b-sqrt(delta)]
-		fdivp st(2), st			// [-b+sqrt(delta)/2a : -b-sqrt(delta)/2a]	
+		fdivp st(2), st			// [-b+sqrt(delta)/2a : -b-sqrt(delta)/2a]
+		fstp x2
+		fstp x1
+
 		jmp End 
 	Equal:
 		fld b					// [b : delta]
@@ -131,15 +156,30 @@ void Task1(float a, float b, float c)
 		fadd					// [2 : -b]
 		fmul a					// [2a : -b]
 		fdivp st(1), st			// [-b/2a]
+		fst x1
+		fstp x2
 
 		jmp End
 	Below:
 		// Nie ma rzeczywistych miejsc zerowych
 	End:
 	}
+
+	if (delta > 0)
+	{
+		cout << "Miejsca zerowe: x1 = " << x1 << " " << "x2 = " << x2 << endl;
+	}
+	else if (delta == 0)
+	{
+		cout << "Miejsce zerower: x1 = " << x1 << endl;
+	}
+	else
+	{
+		cout << "Brak miejsc zerowych w zbiorze liczb rzeczywistych" << endl;
+	}
 }
 
-float** Task2(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB)
+float** AsmMultiplyMatrices(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB)
 {
 	float** result = Create2DMatrix(rowsA, colsB);
 
@@ -148,7 +188,6 @@ float** Task2(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB)
 		push esi
 		push ebx
 
-		
 		mov ecx, rowsA								// iterator i
 
 		LoopI:
@@ -193,7 +232,7 @@ float** Task2(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB)
 	return result;
 }
 
-float** MultiplyMatrices(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB)
+float** CppMultiplyMatrices(float** matrixA, float** matrixB, int rowsA, int rowsB, int colsB)
 {
 	float** result = Create2DMatrix(rowsA, colsB);
 
