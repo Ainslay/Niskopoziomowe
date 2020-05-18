@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="jakub_spalek_lab11_64bit.cpp" />
+    <MASM Include="PrimeNumbers.asm" />
     <MASM Include="SortRealVector.asm">
       <FileType>Document</FileType>
     </MASM>

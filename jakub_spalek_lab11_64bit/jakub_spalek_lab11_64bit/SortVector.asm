@@ -2,7 +2,7 @@ _DATA SEGMENT
 _DATA ENDS
 _TEXT SEGMENT
 
-PUBLIC SortVector		;(int* vector, int n)
+PUBLIC SortVector		            ;(INT64* vector, INT64 n)
 SortVector PROC uses rdi rsi 
     
     mov rsi, rdx                    ; iterator 

@@ -7,9 +7,11 @@ using namespace std;
 
 extern "C" void SortVector(INT64* vector, INT64 n);
 extern "C" void SortRealVector(float* vector, int n);
+extern "C" void PrimeNumbers(INT64 * vector, INT64 n);
 
 void Task1();
 void Task2();
+void Task3();
 void PrintVector(INT64* vector, INT64 n);
 void PrintVector(float* vector, int n);
 
@@ -17,6 +19,7 @@ int main()
 {
     Task1();
     Task2();
+    Task3();
 }
 
 void Task1()
@@ -51,6 +54,22 @@ void Task2()
 
     cout << "Wektor po sortowaniu:     ";
     PrintVector(vec, n);
+
+    cout << endl;
+    system("pause");
+    system("cls");
+}
+
+void Task3()
+{
+    cout << "---=== Zadanie 3 ===---\n\n";
+    INT64 n = 10;
+    INT64* primes = new INT64[n];
+
+    PrimeNumbers(primes, n);
+
+    cout << "Pierwsze " << n << " liczb pierwszy to: ";
+    PrintVector(primes, n);
 
     cout << endl;
     system("pause");

@@ -26,5 +26,8 @@
     <MASM Include="SortRealVector.asm">
       <Filter>Source Files</Filter>
     </MASM>
+    <MASM Include="PrimeNumbers.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

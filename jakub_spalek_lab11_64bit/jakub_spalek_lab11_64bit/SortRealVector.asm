@@ -13,14 +13,11 @@ MainLoop:
 	mov rdi, rsi
 	dec rdi								; index poprzedzaj¹cego elementu
 	
-
 	InsideLoop:
-		fld dword ptr [rdx + rsi * 4]		; aktualny element		[vector[i]]
+		fld dword ptr [rdx + rsi * 4]	; aktualny element		[vector[i]]
 		fld dword ptr [rdx + rdi * 4]	; poprzedni element [vector[i-1] : vector[i]] 
-		fxch st(1)						; [vector[i] : vector[i-1]]
 		fcomi st, st(1)					; porównanie aktualnego z poprzedzaj¹cym
-		fxch st(1)						; [vector[i-1] : vector[i]]
-		jae MoveNext					; jeœli vector[i] >= vector[i-1] to skacz do MoveNext
+		jb MoveNext						; jeœli vector[i-1] < vector[i] to skacz do MoveNext
 		fstp dword ptr [rdx + rsi * 4]	; vector[i] = vector[i-1]	[vector[i]]			
 		fst dword ptr [rdx + rdi * 4]	; vector[i-1] = vector[i]	[vector[i]]
 
