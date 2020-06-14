@@ -80,15 +80,14 @@ int SumMatrix(int** matrix, int rows, int cols)
 
         first:
             mov edi, [esi + 4 * ecx - 4]        // adres wiersza
-            mov ebx, cols
+            mov ebx, cols                       // iterator drugiej pêtli (kolumny)
 
             second:
                 add eax, [edi + 4 * ebx - 4]    // matrix[x][y]
                 dec ebx
                 jnz second  // dopiki ebx > 0 skocz do second
-            
 
-            loop first      // dopóki ecx > 0 skocz do first
+        loop first      // dopóki ecx > 0 skocz do first
 
         mov sum, eax        // zapisanie do wyniku
 
@@ -115,7 +114,7 @@ void Multiply(int** matrix, int* vector, int* result, int rows, int cols)
 
         first:
             mov esi, matrix                 // adres macierzy
-            mov esi, [esi + 4 * ecx - 4]    // ostatni wiersz macierzy
+            mov esi, [esi + 4 * ecx - 4]    // ostatni wiersz macierzy matrix[x]
 
             push ecx
             push ebx
@@ -128,12 +127,13 @@ void Multiply(int** matrix, int* vector, int* result, int rows, int cols)
                 imul eax, [edi + 4 * ecx - 4]    // matrix[x][y] * vector[x]
                 add  ebx, eax                    // result[x] + eax
                 loop second
+            
             mov eax, ebx                         // wynik pêtli wewnêtrznej
             pop ebx
             pop ecx
 
             mov [ebx + 4 * ecx - 4], eax
-            loop first
+        loop first
         
         pop esi
         pop ebx

@@ -61,24 +61,20 @@ int SumujElementyTablicy32(int* tab, int n)
 {
     int sum = 0;
 
-    __asm{
-        push eax                         // przygotowanie rejestrow do pracy
+    __asm {
         push ebx
-        push ecx
 
         xor eax, eax                     // zerowanie wyniku sumowania
-        mov ecx, n                       // przygotowanie iteratora
         mov ebx, tab                     // pobranie adresu tablicy
-
+        mov ecx, n                       // przygotowanie iteratora
+        
         Suma:
             add eax, [ebx + 4 * ecx - 4] //eax += el_tablicy
             loop Suma                    // dopoki ecx > 0 skocz do Suma
         
         mov sum, eax                 // zapisanie wyniku
-        
-        pop ecx                          // przywrocenie stanu rejestrow
+
         pop ebx
-        pop eax
     }
 
     return sum;
@@ -96,7 +92,7 @@ int SumujElementyTablicy32jnz(int* tab, int n)
         xor eax, eax                     // zerowanie wyniku sumowania
         mov ecx, n                       // przygotowanie iteratora
         mov ebx, tab                     // pobranie adresu tablicy
-
+        
         Suma :
         add eax, [ebx + 4 * ecx - 4]     //eax += el_tablicy
             dec ecx
@@ -122,7 +118,7 @@ void ZerujTablice(int* tab, int n)
         mov ebx, tab                     // pobranie adresu tablicy
 
         Zeruj:
-            mov  [ebx + 4 * ecx - 4], 0  // tab[i] = 0
+            mov  [ebx + 4 * ecx - 4], 0   // tab[i] = 0
             loop Zeruj                    // dopoki ecx > 0 skocz do Zeruj
         
         pop ecx                          
@@ -144,9 +140,7 @@ int IloczynSkalarny(int* tab1, int* tab2, int n)
 
     __asm {
         push ebx
-        push edx
         push esi
-        push ecx
 
         mov ecx, n              // iterator
         mov ebx, tab1           // adres pierwszej tablicy
@@ -161,9 +155,7 @@ int IloczynSkalarny(int* tab1, int* tab2, int n)
 
         mov sum, eax                            // zapisz wynik w zmiennej sum
 
-        pop ecx
         pop esi
-        pop edx
         pop ebx
     }
 
@@ -175,8 +167,6 @@ int Max(int* tab, int n)
     int max = 0;
 
     __asm {
-        push eax
-        push ecx
         push ebx
 
         mov ebx, tab                    // adres tablicy
@@ -190,9 +180,8 @@ int Max(int* tab, int n)
             loop Szukaj                     // dopoki i > 0 skacz do Szukaj
         
         mov max, eax                    // zapisz wynik do zmiennej max
+     
         pop ebx
-        pop ecx
-        pop eax
     }
 
     return max;
@@ -203,8 +192,6 @@ int Min(int* tab, int n)
     int min = 0;
 
     __asm {
-        push eax
-        push ecx
         push ebx
 
         mov ebx, tab                    // adres tablicy
@@ -218,9 +205,8 @@ int Min(int* tab, int n)
             loop Szukaj                     // dopoki i > 0 skacz do Szukaj
 
         mov min, eax                    // zapisz wynik do zmiennej min
+        
         pop ebx
-        pop ecx
-        pop eax
     }
 
     return min;

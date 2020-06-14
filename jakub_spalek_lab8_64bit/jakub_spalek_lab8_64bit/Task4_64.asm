@@ -18,7 +18,7 @@ Task4_64 PROC uses rsi rdi, x:qword ; rcx, rdx, r8
                                               
         fstp x                                ; zapis do wyniku, x = st(0)   [stos pusty]
 
-        movd xMM0, x
+        movq xMM0, x
 
         ret
 Task4_64 ENDP
